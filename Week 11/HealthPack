@@ -1,0 +1,20 @@
+using UnityEngine;
+
+public class HealthPack : MonoBehaviour
+{
+    public int healAmount = 10;
+    public int maxHealth = 100;
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+
+        PlayerHealth player = other.GetComponent<PlayerHealth>();
+
+        if (player != null && player.health < maxHealth)
+        {
+            player.health = Mathf.Min(player.health + healAmount, maxHealth);
+            Destroy(gameObject);
+        }
+    }
+}
