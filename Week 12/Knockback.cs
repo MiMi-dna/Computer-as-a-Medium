@@ -1,14 +1,36 @@
 using UnityEngine;
 using System.Collections;
-
 public class Knockback : MonoBehaviour
 {
-    public float knockbackForce = 5f;
-    public float knockbackDuration = 0.2f;
-    public bool isKnockedBack = false;
-
-    public void ApplyKnockback(Vector2 direction)
+    public float knockbackForce;
+    public float knockbackDuration;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Enemy"))
+        {
+        Rigidbody2D rb = other.GetComponent<Rigidbody2D>(); //this is grabbing the gameobject's rigid body not the rigid body attached to the trigger
+        if (rb != null)
+            {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            Vector2 difference = (rb.transform.position - other.transform.position).normalized;
+            rb.AddForce(difference * knockbackForce, ForceMode2D.Impulse);
+            }
+        }
+    }
+
+    public void ApplyKnockback(Vector2 direction){
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
@@ -18,10 +40,12 @@ public class Knockback : MonoBehaviour
 
     private IEnumerator ApplyKnockbackCoroutine(Rigidbody2D rb, Vector2 direction)
     {
-        isKnockedBack = true;
+        if (rb == null)
+            yield break;
+
         rb.AddForce(direction * knockbackForce, ForceMode2D.Impulse);
         yield return new WaitForSeconds(knockbackDuration);
         rb.linearVelocity = Vector2.zero;
-        isKnockedBack = false;
     }
+
 }
