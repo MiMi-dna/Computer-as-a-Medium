@@ -6,22 +6,37 @@ public class Bullet : MonoBehaviour
     public float destroyTime = 3f;
     public float bulletDamage = 5f;
     public Rigidbody2D rb;
+    public Knockback knockback;
+    public float knockbackForce;
 
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb.linearVelocity = transform.up * speed;
         Destroy(gameObject, destroyTime);
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Enemy"))
         {
-            Enemy hitEnemy = other.GetComponent<Enemy>();
+            Enemy enemy = other.GetComponent<Enemy>();
 
-            if (hitEnemy != null)
+            if (enemy != null)
             {
-                hitEnemy.enemyHealth -= bulletDamage;
+                enemy.enemyHealth -= bulletDamage;
+                if (enemy.enemyHealthText != null){
+                    if (enemy.enemyHealth < enemy.enemyHealthMin)
+                    {
+                        enemy.enemyHealth = enemy.enemyHealthMin;
+                    }
+                    enemy.enemyHealthText.text = "Enemy Health: " + enemy.enemyHealth;
+                }
             }
 
             Knockback hitKnockback = other.GetComponent<Knockback>();
@@ -31,7 +46,6 @@ public class Bullet : MonoBehaviour
                 Vector2 direction = (other.transform.position - transform.position).normalized;
                 hitKnockback.ApplyKnockback(direction);
             }
-
             Destroy(gameObject);
         }
     }

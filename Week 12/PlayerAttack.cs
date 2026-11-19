@@ -5,24 +5,32 @@ public class PlayerAttack : MonoBehaviour
 {
     public Animator animator;
     public static bool IsAttacking { get; private set; }
-    public Transform firePoint;
     public GameObject bulletPrefab;
+    public Transform firePoint;
+    PlayerMana playerMana;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        playerMana = GetComponent<PlayerMana>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        IsAttacking = Attack();
-        Shoot();
+            if (playerMana.currentMana > playerMana.minMana)
+            {
+                IsAttacking = Attack();
+                Shoot();
+            }
+            else
+            {
+                IsAttacking = false;
+                animator.SetBool("attack", false);
+            }
     }
 
     public bool Attack()
-
     {
         if (Keyboard.current.fKey.wasPressedThisFrame){
             animator.SetBool("attack", true);
@@ -36,12 +44,12 @@ public class PlayerAttack : MonoBehaviour
         return IsAttacking;
     }
 
+
     void Shoot()
     {
-        if (Keyboard.current.fKey.wasPressedThisFrame) //one time press of the f key will instantiate a bullet at the fire point's position and rotation, no copies are created/multiple bullets are not created
-            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation); //this creates a copy of the bullet prefab at the fire point's position and rotation, which is set in the inspector
+        if (Keyboard.current.fKey.wasPressedThisFrame)
+        {
+            Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        }
     }
 }
-
-
-

@@ -1,9 +1,11 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
     public int health = 100;
+    public bool isDamaged = false;
+    public int maxHealth = 100;
     public TMP_Text healthText;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
