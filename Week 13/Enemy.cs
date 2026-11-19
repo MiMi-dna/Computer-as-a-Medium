@@ -16,10 +16,6 @@ public class Enemy : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (enemyHealthText != null)
-        {
-            enemyHealthText.text = "Enemy Health: " + enemyHealth;
-        }
     }
 
     // Update is called once per frame
@@ -71,6 +67,11 @@ public class Enemy : MonoBehaviour
     {
         if (enemyHealth <= enemyHealthMin)
         {
+            if (enemyHealthText != null) //this is needed to avoid null references for instanced enemies w/out health text assigned
+            {
+                enemyHealthText.text = "Enemy Health: " + enemyHealthMin;
+            }
+            GameObject.Find("GameManager").GetComponent<GameManager>().enemyHealthUI.SetActive(false);
             Destroy(gameObject);
         }
     }

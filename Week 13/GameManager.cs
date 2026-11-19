@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
     private static WaitForSeconds _waitForSeconds1 = new WaitForSeconds(1f);
 
     public PlayerHealth playerHealth;
+    public Enemy enemy;
     public GameObject player;
     public GameObject enemyHealthUI;
 
@@ -29,6 +30,12 @@ public class GameManager : MonoBehaviour
     {
         DamagedPlayer();
         GameEnd();
+    }
+
+    private void BossUI()
+    {
+        enemyHealthUI.SetActive(false);
+        
     }
 
     //sets ouch text to active when player is damaged, then starts a coroutine to wait 1 second before setting it to inactive again
