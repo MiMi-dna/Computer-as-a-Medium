@@ -1,26 +1,20 @@
 using UnityEngine;
 using System.Collections;
+
+[RequireComponent(typeof(Rigidbody2D))] //whenever this script is attached to a game object, it auto add the required components that 
+//it depends on to prevent errors and simply setup, must be added before the class
+
 public class Knockback : MonoBehaviour
 {
     public float knockbackForce = 5f;
     public float knockbackDuration = 0.2f;
     public bool isKnockedBack = false;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    Rigidbody2D rb;
 
     public void ApplyKnockback(Vector2 direction)
     {
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
+        
         if (rb != null)
         {
             StartCoroutine(ApplyKnockbackCoroutine(rb, direction));

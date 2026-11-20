@@ -1,33 +1,30 @@
 using UnityEngine;
-using System.Collections;
 using TMPro;
 
 public class Enemy : MonoBehaviour
 {
+    [SerializeField] TMP_Text enemyHealthText;
     public float enemyHealthMax = 20f;
-    public float enemyHealth = 20f;
+    public float enemyCurrentHealth = 20f;
     public float enemyHealthMin = 0f;
     public float swordDamage = 10f;
+    Bullet bullet;
     public float knockbackForce = 5f;
-    public TMP_Text enemyHealthText;
     public Knockback knockback;
     private int damageToPlayer = 10;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if(enemyHealthText != null) //prevent null exception from Spawned enemies and receives UI text from "Boss"
+        {
+        enemyHealthText.text = "Boss Health: " + enemyCurrentHealth;
+        }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        Death();
-    }
-
     // Handle collisions
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //checks if the other object has the tag "Sword", does damage to enemy and applies knockback
+        //collision w/ sword:
         if (other.CompareTag("Sword"))
         {
             if (knockback != null)
@@ -35,14 +32,34 @@ public class Enemy : MonoBehaviour
                 Vector2 direction = (other.transform.position - transform.position).normalized;
                 knockback.ApplyKnockback(direction);
             }
-            enemyHealth -= swordDamage;
+            enemyCurrentHealth -= swordDamage;
+        }
 
-            if(enemyHealthText != null) //this is needed to avoid null references for instanced enemies w/out health text assigned
+        //collision w/ bullet
+        else if (other.CompareTag("Bullet"))
+        {
+            bullet = other.GetComponent<Bullet>();
+            if (bullet != null)
             {
-                enemyHealthText.text = "Enemy Health: " + enemyHealth;
+                enemyCurrentHealth -= bullet.bulletDamage;
             }
         }
 
+        if(enemyHealthText != null)
+        {
+            if(enemyCurrentHealth > enemyHealthMin)
+            {
+                enemyHealthText.text = "Health: " + enemyCurrentHealth;
+            }
+            else if (enemyCurrentHealth <= enemyHealthMin)
+            {
+                enemyHealthText.text = "Health: " + enemyHealthMin;
+                GameObject.Find("GameManager").GetComponent<GameManager>().BossUI();
+                Death();
+            }
+        }
+
+        //collision w/ player
         if (other.CompareTag("Player"))
         {
             PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
@@ -50,11 +67,14 @@ public class Enemy : MonoBehaviour
             //checks if the other object has the tag "Player", does damage to player and applies knockback
             if (playerHealth != null)
             {
-                playerHealth.health -= damageToPlayer;
+                playerHealth.currentHealth -= damageToPlayer;
                 playerHealth.isDamaged = true;
+                playerHealth.UpdatePlayerHealth();
+                
             }
 
             Knockback knockback = other.GetComponent<Knockback>();
+
             if (knockback != null)
             {
                 Vector2 direction = (other.transform.position - transform.position).normalized;
@@ -64,15 +84,8 @@ public class Enemy : MonoBehaviour
     }
 
     void Death()
-    {
-        if (enemyHealth <= enemyHealthMin)
         {
-            if (enemyHealthText != null) //this is needed to avoid null references for instanced enemies w/out health text assigned
-            {
-                enemyHealthText.text = "Enemy Health: " + enemyHealthMin;
-            }
-            GameObject.Find("GameManager").GetComponent<GameManager>().enemyHealthUI.SetActive(false);
             Destroy(gameObject);
         }
-    }
 }
+

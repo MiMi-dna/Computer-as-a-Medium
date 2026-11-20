@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerMana))]
+
 public class PlayerAttack : MonoBehaviour
 {
+    private static readonly int AttackHash = Animator.StringToHash("attack"); //optimizing string comparison, it turns the string "attack" and converts it to an integer making comparisons faster
     public Animator animator;
     public static bool IsAttacking { get; private set; }
     public GameObject bulletPrefab;
@@ -26,24 +29,24 @@ public class PlayerAttack : MonoBehaviour
             else
             {
                 IsAttacking = false;
-                animator.SetBool("attack", false);
+                animator.SetBool(AttackHash, false);
             }
     }
 
     public bool Attack()
     {
         if (Keyboard.current.fKey.wasPressedThisFrame){
-            animator.SetBool("attack", true);
+            animator.SetBool(AttackHash, true);
             IsAttacking = true;
+            playerMana.DecreaseMana();
         }
         else
         {
-            animator.SetBool("attack", false);
+            animator.SetBool(AttackHash, false);
             IsAttacking = false;
         }
         return IsAttacking;
     }
-
 
     void Shoot()
     {

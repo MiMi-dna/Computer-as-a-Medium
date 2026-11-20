@@ -1,10 +1,8 @@
 using UnityEngine;
-using TMPro; //timer/ticks
-using System.Collections;
-
+using TMPro;
 public class PlayerMana : MonoBehaviour
 {
-    private float maxMana = 100f;
+    public float maxMana = 100f;
     public float minMana = 0f;
     public float currentMana;
     private float startingMana = 100f;
@@ -21,27 +19,24 @@ public class PlayerMana : MonoBehaviour
     }
     void Update()
     {
-        manaText.text = "Mana: " + Mathf.FloorToInt(currentMana);
-
-        decreaseMana();
-
-        regenMana();
+        RegenMana();
         
     }
 
-    void decreaseMana()
+    public void DecreaseMana()
     {
         if (PlayerAttack.IsAttacking)
         {
             currentMana -= decreaseAmnt; 
-        }
-        if (currentMana < minMana)
-        {
-            currentMana = minMana;
+            if (currentMana < minMana)
+            {
+                currentMana = minMana;
+            }
+            manaText.text = "Mana: " + Mathf.FloorToInt(currentMana);
         }
     }
 
-    void regenMana()
+    void RegenMana()
     {
         if (PlayerAttack.IsAttacking)
         {
@@ -58,6 +53,7 @@ public class PlayerMana : MonoBehaviour
             }
 
             currentMana += regenRate;
+            manaText.text = "Mana: " + Mathf.FloorToInt(currentMana);
             timeElapsed = 0.0f; // Reset cooldown after regeneration
         }
         else if (currentMana >= maxMana)

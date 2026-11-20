@@ -3,19 +3,53 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int health = 100;
     public bool isDamaged = false;
+    public bool isHealed = false;
+    public int currentHealth = 100;
     public int maxHealth = 100;
-    public TMP_Text healthText;
+    public int minHealth = 0;
+    [SerializeField] TMP_Text healthText;
+
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        healthText.text = "Health: " + health;
+        healthText.text = "Health: " + currentHealth;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void UpdatePlayerHealth()
     {
-        healthText.text = "Health: " + health;
+        if (isDamaged == true)
+        {
+            if(currentHealth > minHealth)
+            {
+                healthText.text = "Health: " + currentHealth;
+                GameObject.Find("GameManager").GetComponent<GameManager>().BossUI();
+            }
+            else if (currentHealth <= minHealth)
+            {
+                healthText.text = "Health: " + minHealth;
+                Death();
+            }
+        }
+
+        if(isHealed == true)
+        {
+            if(currentHealth >= maxHealth)
+            {
+                healthText.text = "Health: " + maxHealth;
+            }
+            else
+            {
+                healthText.text = "Health: " + currentHealth;
+            }
+            isHealed = false;
+        }    
+    }
+
+    void Death()
+    {
+        Destroy(gameObject);
     }
 }
+

@@ -3,18 +3,6 @@ using UnityEngine;
 public class Trap : MonoBehaviour
 {
     public int damage = 10;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
@@ -22,8 +10,9 @@ public class Trap : MonoBehaviour
         PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
         if (playerHealth != null)
         {
-            playerHealth.health -= damage;
+            playerHealth.currentHealth -= damage;
             playerHealth.isDamaged = true;
+            playerHealth.UpdatePlayerHealth();
         }
 
         Knockback knockback = other.GetComponent<Knockback>();
