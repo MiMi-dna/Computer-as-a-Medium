@@ -13,6 +13,8 @@ public class ManaPack : MonoBehaviour
         if (player != null && player.currentMana < player.maxMana)
         {
             player.currentMana = Mathf.Min(player.currentMana + restoreAmount, player.maxMana); 
+            player.isRestored = true;
+            player.UpdatePlayerMana();
             Destroy(gameObject);
         }
     }

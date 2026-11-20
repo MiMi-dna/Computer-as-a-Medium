@@ -11,6 +11,7 @@ public class PlayerMana : MonoBehaviour
     private float regenDelay = 1.0f;
     [SerializeField] private TMP_Text manaText;
     public float decreaseAmnt = 10f;
+    public bool isRestored = false;
 
     void Start()
     {
@@ -19,6 +20,8 @@ public class PlayerMana : MonoBehaviour
     }
     void Update()
     {
+        manaText.text = "Mana: " + Mathf.FloorToInt(currentMana);
+
         RegenMana();
         
     }
@@ -53,7 +56,10 @@ public class PlayerMana : MonoBehaviour
             }
 
             currentMana += regenRate;
-            manaText.text = "Mana: " + Mathf.FloorToInt(currentMana);
+            if (currentMana >= maxMana)
+            {
+                currentMana = maxMana;
+            }
             timeElapsed = 0.0f; // Reset cooldown after regeneration
         }
         else if (currentMana >= maxMana)
@@ -61,5 +67,20 @@ public class PlayerMana : MonoBehaviour
             currentMana = maxMana;
         }
     }
+    public void UpdatePlayerMana()
+    {
+        if (isRestored == true)
+            if(currentMana >= maxMana)
+            {
+                manaText.text = "Mana: " + maxMana;
+                isRestored = false;
+            }
+            else
+            {
+                manaText.text = "Mana: " + Mathf.FloorToInt(currentMana);
+                isRestored = false;
+            }
+    }    
 }
+
 
