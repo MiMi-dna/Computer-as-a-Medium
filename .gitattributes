@@ -1,7 +1,7 @@
 # Auto detect text files and perform LF normalization
 #* text=auto
 #Computer As A Medium
-## This is a repo form
+## This is a repo from
 C:/Windows.old/Users/erive/Recent/My[[:space:]]FPS[[:space:]]Windows[[:space:]]Build[[:space:]]Final.lnk filter=lfs diff=lfs merge=lfs -text
 F:/Documents/GitHub/Computer filter=lfs diff=lfs merge=lfs -text
 a filter=lfs diff=lfs merge=lfs -text
